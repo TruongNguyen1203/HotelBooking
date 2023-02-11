@@ -31,3 +31,7 @@
 /Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/obj/Debug/net7.0/VillaBooking.pdb
 /Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/obj/Debug/net7.0/VillaBooking.genruntimeconfig.cache
 /Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/obj/Debug/net7.0/ref/VillaBooking.dll
+/Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/bin/Debug/net7.0/Microsoft.AspNetCore.JsonPatch.dll
+/Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/bin/Debug/net7.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/truongnguyen/code/VillaBooking/VillaBooking/VillaBooking/bin/Debug/net7.0/Newtonsoft.Json.Bson.dll
