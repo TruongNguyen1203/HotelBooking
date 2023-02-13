@@ -2,9 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using VillaBooking.Data;
 using VillaBooking.Models;
 using VillaBooking.Models.Dto;
@@ -15,24 +19,38 @@ namespace VillaBooking.Controllers
     [ApiController]
     public class HotelApiController : ControllerBase
     {
+        private readonly ILogger<HotelApiController> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+
+        public HotelApiController(ILogger<HotelApiController> logger, ApplicationDbContext context, IMapper mapper)
+        {
+            _logger = logger;
+            _context = context;
+            _mapper = mapper;
+        }
+        
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
-        public ActionResult<IEnumerable<HotelDto>> GetHotels()
+        public async Task<ActionResult<IEnumerable<HotelDto>>> GetHotels()
         {
-            return Ok(HotelStore.HotelDtos);
+            _logger.LogInformation("Load all hotels");
+            var hotels = await _context.Hotels.ToListAsync();
+            return Ok( _mapper.Map<List<HotelDto>>(hotels));
         }
         
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("id", Name = "GetById")]
-        public ActionResult<HotelDto> GetById(int id)
+        public async Task<ActionResult<HotelDto>> GetById(int id)
         {
             if (id <= 0)
             {
+                _logger.LogError($"Get error with id {id}");
                 return BadRequest();
             }
-            var result = HotelStore.HotelDtos.FirstOrDefault(x => x.Id == id);
+            var result = await _context.Hotels.FirstOrDefaultAsync(x => x.Id == id);
 
             if (result == null)
             {
@@ -46,14 +64,15 @@ namespace VillaBooking.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<HotelDto> CreateHotel([FromBody] HotelDto hotelDto)
+        public async Task<ActionResult<HotelDto>> CreateHotel([FromBody] HotelDto hotelDto)
         {
             // if (!ModelState.IsValid)
             // {
             //     return BadRequest(ModelState);
             // }
-
-            if (HotelStore.HotelDtos.FirstOrDefault(x => x.Name.ToLower() == hotelDto.Name.ToLower()) != null)
+            var data = await _context.Hotels.FirstOrDefaultAsync(x => x.Name.ToLower() == hotelDto.Name.ToLower());
+            
+            if (data != null)
             {
                 ModelState.AddModelError("CustomError" , "Already exist");
                 return BadRequest(ModelState);
@@ -63,8 +82,11 @@ namespace VillaBooking.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            hotelDto.Id = HotelStore.HotelDtos.OrderByDescending(x => x.Id).First().Id + 1;
-            HotelStore.HotelDtos.Add(hotelDto);
+            var hotel = _mapper.Map<Hotel>(hotelDto);
+            hotel.CreatedDate = DateTime.Now;
+            hotel.UpdatedDate = DateTime.Now;
+            _context.Hotels.Add(hotel);
+            await _context.SaveChangesAsync();
 
             return CreatedAtRoute("GetById",new{id = hotelDto.Id},hotelDto);
         }
@@ -73,66 +95,75 @@ namespace VillaBooking.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult DeleteById(int id)
+        public async Task<ActionResult> DeleteById(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
 
-            var hotel = HotelStore.HotelDtos.FirstOrDefault(x => x.Id == id);
+            var hotel = await _context.Hotels.FirstOrDefaultAsync(x => x.Id == id);
 
             if (hotel == null)
             {
                 return NotFound();
             }
 
-            HotelStore.HotelDtos.Remove(hotel);
-
+            _context.Hotels.Remove(hotel);
+            await _context.SaveChangesAsync();
+    
             return NoContent();
         }
 
         [HttpPut]
-        public ActionResult UpdateHotel(int id, [FromBody] HotelDto hotelDto)
+        public async Task<ActionResult> UpdateHotel(int id, [FromBody] HotelDto hotelDto)
         {
             if (id != hotelDto.Id)
             {
                 return BadRequest();
             }
 
-            var hotel = HotelStore.HotelDtos.FirstOrDefault(x => x.Id == id);
+            var hotel = await _context.Hotels.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             if (hotel == null)
             {
                 return NotFound();
             }
-
-            hotel.Name = hotelDto.Name;
-            hotel.Sqft = hotelDto.Sqft;
-            hotel.Ocupation = hotelDto.Ocupation;
-
+            hotel = _mapper.Map<Hotel>(hotelDto);
+            hotel.UpdatedDate = DateTime.Now;
+            
+            _context.Hotels.Update(hotel);
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
 
         [HttpPatch("id")]
-        public ActionResult UpdatePartialHotel(int id, JsonPatchDocument<HotelDto>? hotelDto)
+        public async Task<ActionResult> UpdatePartialHotel(int id, JsonPatchDocument<HotelDto>? hotelPatch)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
 
-            var hotel = HotelStore.HotelDtos.FirstOrDefault(x => x.Id == id);
+            var hotel = await _context.Hotels.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             if (hotel == null)
             {
                 return NotFound();
             }
+
+            var hotelDto = _mapper.Map<HotelDto>(hotel);
             
-            hotelDto.ApplyTo(hotel, ModelState);
-            
+            hotelPatch.ApplyTo(hotelDto, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            hotel = _mapper.Map<Hotel>(hotelDto);
+
+            _context.Hotels.Update(hotel);
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
     }
