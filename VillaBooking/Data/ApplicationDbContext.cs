@@ -11,6 +11,7 @@ namespace VillaBooking.Data
         }
 
         public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<Area> Areas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
