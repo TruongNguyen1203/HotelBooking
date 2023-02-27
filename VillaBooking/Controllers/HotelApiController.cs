@@ -170,7 +170,7 @@ namespace VillaBooking.Controllers
                     return BadRequest();
                 }
 
-                var hotel = await _hotelRepository.GetAsync(x => x.Id == id);
+                var hotel = await _hotelRepository.GetAsync(x => x.Id == id, false);
                 if (hotel == null)
                 {
                     return NotFound();
