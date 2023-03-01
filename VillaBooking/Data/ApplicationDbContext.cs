@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using VillaBooking.Models;
+using VillaBookingConsume.Models;
 
 namespace VillaBooking.Data
 {
@@ -12,6 +13,7 @@ namespace VillaBooking.Data
 
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Area> Areas { get; set; }
+        public DbSet<LocalUser> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

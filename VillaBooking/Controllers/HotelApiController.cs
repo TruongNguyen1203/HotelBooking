@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace VillaBooking.Controllers
 {
     [Route("api/hotels")]
     [ApiController]
+    [Authorize]
     public class HotelApiController : ControllerBase
     {
         private readonly ILogger<HotelApiController> _logger;
@@ -36,6 +38,7 @@ namespace VillaBooking.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse>> GetHotels()
         {
             _logger.LogInformation("Load all hotels");
@@ -131,6 +134,7 @@ namespace VillaBooking.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "custom")]
         public async Task<ActionResult<ApiResponse>> DeleteById(int id)
         {
             try

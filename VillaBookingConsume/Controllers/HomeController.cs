@@ -1,22 +1,37 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using VillaBookingConsume.Models;
+using VillaBookingConsume.Models.Dto;
+using VillaBookingConsume.Service.IService;
 
 namespace VillaBookingConsume.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    private readonly IHotelService _hotelService;
+    public HomeController(ILogger<HomeController> logger, IHotelService hotelService)
     {
         _logger = logger;
+        _hotelService = hotelService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var list = new List<HotelDto>();
+        var response = await _hotelService.GetAllAsync<ApiResponse>();
+        if (response != null && response.IsSuccess)
+        {
+            list = JsonConvert.DeserializeObject<List<HotelDto>>(Convert.ToString(response.Result));
+        }
+        return View(list);
     }
+
 
     public IActionResult Privacy()
     {

@@ -3,12 +3,12 @@ using VillaBookingConsume.Models.Dto;
 
 namespace VillaBookingConsume.Service.IService
 {
-    public interface IHotelService
+    public interface IAreaService
     {
         Task<T> GetAllAsync<T>();
         Task<T> GetByIdAsync<T>(int id);
-        Task<T> CreateAsync<T>(HotelCreateDto hotelCreateDto);
-        Task<T> UpdateAsync<T>(HotelUpdateDto hotelUpdateDto);
+        Task<T> CreateAsync<T>(AreaDto areaDto);
+        Task<T> UpdateAsync<T>(AreaDto areaDto);
         Task<T> DeleteAsync<T>(int id);
     }
 }

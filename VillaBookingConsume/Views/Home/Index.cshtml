@@ -1,8 +1,33 @@
-﻿@{
+﻿@model List<VillaBookingConsume.Models.Dto.HotelDto>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<link href="css/homepage.css" rel="stylesheet"/>
+
+<img class="d-block w-100" src="/images/slide1.jpeg" alt="">
+
+<hr />
+
+<div class="home-container">
+  @foreach (var hotel in Model)
+  {
+          <div class="home-card">
+              <div>
+                  <img src="@hotel.ImageUrl">
+                  <button>Book</button>
+              </div>
+              <div>
+                  <p class="name">@hotel.Name</p>
+                  <p class="details">@hotel.Details</p>
+                  <div class="extra-container">
+                      <span class="extra-info">
+                          <p>Max Occupacity: @hotel.Occupancy aldults</p>
+                          <p>Villa Size: @hotel.Sqft sqft</p>
+                      </span>
+                      <p class="price">USD $@hotel.Rate</p>
+                  </div>
+              </div>
+          </div>
+  }
 </div>

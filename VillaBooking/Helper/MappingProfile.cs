@@ -1,6 +1,8 @@
 using AutoMapper;
 using VillaBooking.Models;
 using VillaBooking.Models.Dto;
+using VillaBookingConsume.Models;
+using VillaBookingConsume.Models.Dto.Authentication;
 
 namespace VillaBooking.Helper
 {
@@ -14,6 +16,7 @@ namespace VillaBooking.Helper
             CreateMap<Hotel, HotelUpdateDto>().ReverseMap();
 
             CreateMap<Area, AreaDto>().ReverseMap();
+            CreateMap<LocalUser, RegistrationDto>().ReverseMap();
         }
     }
 }

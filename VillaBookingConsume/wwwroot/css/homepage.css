@@ -1,0 +1,50 @@
+.home-container{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.home-card{
+    width: calc(50% - 20px);
+    border: 1px solid #000000;
+    border-radius: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.home-container img{
+    width: 200px;
+    border-radius: 12px;
+    padding: 0 5px 5px 5px ;
+}
+
+.home-container button {
+    width: 200px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: limegreen;
+}
+
+.name, .price {
+    color: orange;
+    font-weight: bold;
+}
+
+.name {
+    font-size: 20px;
+}
+
+.details, .extra-info {
+    font-size: 12px;
+}
+
+.extra-info {
+    line-height: 0.5;
+}
+.extra-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

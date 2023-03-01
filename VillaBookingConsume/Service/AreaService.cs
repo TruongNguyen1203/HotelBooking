@@ -9,14 +9,14 @@ using VillaBookingConsume.Service.IService;
 
 namespace VillaBookingConsume.Service
 {
-    public class HotelService : BaseService, IHotelService
+    public class AreaService : BaseService, IAreaService
     {
         private readonly IHttpClientFactory _client;
         private string _hotelApiUrl;
-        public HotelService(IHttpClientFactory httpClient, IHttpClientFactory client, IConfiguration configuration) : base(httpClient)
+        public AreaService(IHttpClientFactory httpClient, IHttpClientFactory client, IConfiguration configuration) : base(httpClient)
         {
             _client = client;
-            _hotelApiUrl = string.Format($"{configuration.GetValue<string>("ServiceUrls:HotelApi")}/api/hotels");
+            _hotelApiUrl = string.Format($"{configuration.GetValue<string>("ServiceUrls:HotelApi")}/api/areas");
         }
 
         public async Task<T> GetAllAsync<T>()
@@ -37,23 +37,23 @@ namespace VillaBookingConsume.Service
             });
         }
 
-        public async Task<T> CreateAsync<T>(HotelCreateDto hotelCreateDto)
+        public async Task<T> CreateAsync<T>(AreaDto areaDto)
         {
             return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = Enumerator.ApiType.POST,
                 Url = _hotelApiUrl,
-                Data = hotelCreateDto
+                Data = areaDto
             });
         }
 
-        public async Task<T> UpdateAsync<T>(HotelUpdateDto hotelUpdateDto)
+        public async Task<T> UpdateAsync<T>(AreaDto areaDto)
         {
             return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = Enumerator.ApiType.PUT,
-                Url = string.Format($"{_hotelApiUrl}?id={hotelUpdateDto.Id}") ,
-                Data = hotelUpdateDto
+                Url = string.Format($"{_hotelApiUrl}?id={areaDto.Id}") ,
+                Data = areaDto
             });
         }
 

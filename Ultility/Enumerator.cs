@@ -1,7 +1,13 @@
 namespace Ultility
 {
-    public class Enumerator
+    public static class Enumerator
     {
-        
+        public enum ApiType
+        {
+            GET,
+            POST,
+            PUT,
+            DELETE
+        }
     }
 }

@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VillaBooking", "VillaBooking\VillaBooking.csproj", "{2AED8526-95AB-4529-A16E-0F1258DF3380}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VillaBookingConsume", "VillaBookingConsume\VillaBookingConsume.csproj", "{37B45968-ADCD-4CE9-97E2-38CC11C53E27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultility", "Ultility\Ultility.csproj", "{FBCB1565-C6C6-4070-9300-B592869C41D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,13 @@ Global
 		{2AED8526-95AB-4529-A16E-0F1258DF3380}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AED8526-95AB-4529-A16E-0F1258DF3380}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AED8526-95AB-4529-A16E-0F1258DF3380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37B45968-ADCD-4CE9-97E2-38CC11C53E27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37B45968-ADCD-4CE9-97E2-38CC11C53E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37B45968-ADCD-4CE9-97E2-38CC11C53E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37B45968-ADCD-4CE9-97E2-38CC11C53E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBCB1565-C6C6-4070-9300-B592869C41D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBCB1565-C6C6-4070-9300-B592869C41D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBCB1565-C6C6-4070-9300-B592869C41D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBCB1565-C6C6-4070-9300-B592869C41D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

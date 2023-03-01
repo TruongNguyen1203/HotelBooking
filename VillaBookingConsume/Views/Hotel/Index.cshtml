@@ -1,18 +1,75 @@
-@model TModel
+@model List<VillaBookingConsume.Models.Dto.HotelDto>
 
-@{
-    Layout = null;
-}
+<br/>
+<div class="container p-4 border">
+    <div class="row pd-2">
+        <div class="col">
+            <h1 class="text-primary">Villa List</h1>
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-controller="Hotel" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i>Create New Villa</a>
+        </div>
+    </div>
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+    <table class="table" id="my-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Ocupany</th>
+            <th>Rate</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var hotel in Model)
+        {
+            <tr>
+                <td>@hotel.Name</td>
+                <td>@hotel.Occupancy</td>
+                <td>@hotel.Rate.ToString("c")</td>
+                <td>
+                    <a asp-controller="Hotel" asp-action="Update" asp-route-id="@hotel.Id" class="btn btn-success">
+                        <i
+                            class="bi bi-pencil-square">
+                        </i>
+                    </a>
+                    <a id="my-trash-@hotel.Id" onclick="runDelete(@hotel.Id)" class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>
-</body>
-</html>
+
+<script>
+function deleteRow(r) {
+  var i = r.parentNode.parentNode.rowIndex;
+  console.log("i :" + i );
+  document.getElementById("my-table").deleteRow(i);
+}
+function runDelete(id) {
+    console.log("sending" + id);
+        var xhr = new XMLHttpRequest();
+              var url = "http://localhost:5008/api/hotels?id=" + id;
+              xhr.open("DELETE", url,  true);
+              xhr.send();
+              xhr.onreadystatechange = function() {
+                  console.log("status code: " + xhr.status)
+                      // xmlhttp.status==200 == successful request
+                      swal({
+                              title: 'Delete successfully!',
+                              showConfirmButton: false,
+                              icon: 'success',
+                              position: 'top-end',
+                              timer: 2000,
+                              timerProgressBar: true
+                              })
+                      deleteRow(document.getElementById("my-trash-" + id));
+
+         console.log("complete");
+        }
+        }
+     
+</script>
