@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Ultility;
 using VillaBookingConsume.Models;
 using VillaBookingConsume.Models.Dto;
 using VillaBookingConsume.Service.IService;
@@ -22,6 +25,7 @@ namespace VillaBookingConsume.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var list = new List<HotelDto>();
@@ -32,7 +36,8 @@ namespace VillaBookingConsume.Controllers
             }
             return View(list);
         }
-
+    
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -40,11 +45,12 @@ namespace VillaBookingConsume.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(HotelCreateDto hotelCreateDto)
         {
             if (ModelState.IsValid)
             {
-                var res = await _hotelService.CreateAsync<ApiResponse>(hotelCreateDto);
+                var res = await _hotelService.CreateAsync<ApiResponse>(hotelCreateDto, HttpContext.Session.GetString(Constant.Token));
                 if (res != null && res.IsSuccess)
                 {
                     TempData["success"] = "Create hotel successfully"; 
@@ -55,6 +61,8 @@ namespace VillaBookingConsume.Controllers
 
             return View(hotelCreateDto);
         }
+        
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id)
         {
             var res = await _hotelService.GetByIdAsync<ApiResponse>(id);
@@ -68,11 +76,13 @@ namespace VillaBookingConsume.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Update(HotelUpdateDto updateDto)
         {
             if (ModelState.IsValid)
             {
-                var res = await _hotelService.UpdateAsync<ApiResponse>(updateDto);
+                var res = await _hotelService.UpdateAsync<ApiResponse>(updateDto, HttpContext.Session.GetString(Constant.Token));
                 if (res != null && res.IsSuccess)
                 {
                     TempData["success"] = "Update hotel successfully"; 

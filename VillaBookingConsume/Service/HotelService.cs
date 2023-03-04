@@ -37,32 +37,35 @@ namespace VillaBookingConsume.Service
             });
         }
 
-        public async Task<T> CreateAsync<T>(HotelCreateDto hotelCreateDto)
+        public async Task<T> CreateAsync<T>(HotelCreateDto hotelCreateDto, string token)
         {
             return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = Enumerator.ApiType.POST,
                 Url = _hotelApiUrl,
-                Data = hotelCreateDto
+                Data = hotelCreateDto,
+                Token = token
             });
         }
 
-        public async Task<T> UpdateAsync<T>(HotelUpdateDto hotelUpdateDto)
+        public async Task<T> UpdateAsync<T>(HotelUpdateDto hotelUpdateDto, string token)
         {
             return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = Enumerator.ApiType.PUT,
                 Url = string.Format($"{_hotelApiUrl}?id={hotelUpdateDto.Id}") ,
-                Data = hotelUpdateDto
+                Data = hotelUpdateDto,
+                Token = token
             });
         }
 
-        public async Task<T> DeleteAsync<T>(int id)
+        public async Task<T> DeleteAsync<T>(int id, string token)
         {
             return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = Enumerator.ApiType.DELETE,
-                Url = String.Format($"{_hotelApiUrl}/id?id={id}")
+                Url = String.Format($"{_hotelApiUrl}/id?id={id}"),
+                Token = token
             });
         }
     }

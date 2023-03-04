@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
@@ -63,6 +64,12 @@ namespace VillaBookingConsume.Service
                 }
 
                 HttpResponseMessage apiResponse = new();
+
+                if (!string.IsNullOrEmpty(apiRequest.Token))
+                {
+                    client.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", apiRequest.Token);
+                }
 
                 apiResponse = await client.SendAsync(message);
 

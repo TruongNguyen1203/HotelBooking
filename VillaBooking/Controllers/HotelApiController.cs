@@ -17,7 +17,7 @@ namespace VillaBooking.Controllers
 {
     [Route("api/hotels")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class HotelApiController : ControllerBase
     {
         private readonly ILogger<HotelApiController> _logger;
@@ -38,7 +38,7 @@ namespace VillaBooking.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse>> GetHotels()
         {
             _logger.LogInformation("Load all hotels");
@@ -62,6 +62,7 @@ namespace VillaBooking.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("id", Name = "GetById")]
+        [AllowAnonymous]
         public async Task<ActionResult<ApiResponse>> GetById(int id)
         {
             try
@@ -134,7 +135,7 @@ namespace VillaBooking.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = "custom")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResponse>> DeleteById(int id)
         {
             try

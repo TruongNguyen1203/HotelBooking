@@ -7,8 +7,8 @@ namespace VillaBookingConsume.Service.IService
     {
         Task<T> GetAllAsync<T>();
         Task<T> GetByIdAsync<T>(int id);
-        Task<T> CreateAsync<T>(HotelCreateDto hotelCreateDto);
-        Task<T> UpdateAsync<T>(HotelUpdateDto hotelUpdateDto);
-        Task<T> DeleteAsync<T>(int id);
+        Task<T> CreateAsync<T>(HotelCreateDto hotelCreateDto, string token);
+        Task<T> UpdateAsync<T>(HotelUpdateDto hotelUpdateDto, string token);
+        Task<T> DeleteAsync<T>(int id, string token);
     }
 }

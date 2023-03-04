@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Http
+@using Ultility
+@inject IHttpContextAccessor HttpContextAccessor
 @model List<VillaBookingConsume.Models.Dto.HotelDto>
 
 <br/>
@@ -51,9 +54,12 @@ function deleteRow(r) {
 }
 function runDelete(id) {
     console.log("sending" + id);
+    var test = '@HttpContextAccessor.HttpContext.Session.GetString(Constant.Token)';
+    //console.log("test: " + test)
         var xhr = new XMLHttpRequest();
               var url = "http://localhost:5008/api/hotels?id=" + id;
               xhr.open("DELETE", url,  true);
+              xhr.setRequestHeader("Authorization", "Bearer " + test)
               xhr.send();
               xhr.onreadystatechange = function() {
                   console.log("status code: " + xhr.status)
