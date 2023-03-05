@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,10 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using VillaBooking.Data;
 using VillaBooking.Models;
 using VillaBooking.Models.Dto;
 using VillaBooking.Repository.IRepository;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace VillaBooking.Controllers
 {
@@ -36,15 +39,35 @@ namespace VillaBooking.Controllers
             _response = new();
         }
 
+        [ResponseCache(CacheProfileName = "Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse>> GetHotels()
+        public async Task<ActionResult<ApiResponse>> GetHotels([FromQuery(Name = "filterOccuapancy")]int? ocupancy, [FromQuery] string? search
+        , int pageSize = 1, int pageNumber = 1)
         {
             _logger.LogInformation("Load all hotels");
+            IEnumerable<Hotel> hotels;
             try
             {
-                var hotels = await _hotelRepository.GetAllAsync();
+                if (ocupancy > 0)
+                {
+                     hotels = await _hotelRepository.GetAllAsync(x => x.Occupancy == ocupancy, pageSize: pageSize, pageNumber:pageNumber);
+
+                }
+                else
+                {
+                    hotels = await _hotelRepository.GetAllAsync(pageSize: pageSize, pageNumber:pageNumber);
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    hotels = hotels.Where(x => x.Name.ToLower().Contains(search));
+                }
+
+                Pagination pagination = new() {PageSize = pageSize, PageNumber = pageNumber};
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagination) );
+
                 _response.Result = _mapper.Map<List<HotelDto>>(hotels);
                 _response.HttpStatusCode = HttpStatusCode.OK;
                 return Ok(_response);
